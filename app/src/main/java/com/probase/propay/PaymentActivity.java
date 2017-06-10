@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,14 +25,14 @@ import java.util.Map;
 
 public class PaymentActivity extends Activity implements View.OnClickListener {
     private String TAG = PaymentActivity.class.getSimpleName();
-    private EditText etPin;
-    private Button btPay;
+    private EditText mPin;
+    private Button mPay;
     private String amount;
     private String merchantId;
     private ProgressDialog pDialog;
+    private String stringPin;
     // These tags will be used to cancel the requests
     private String tag_json_obj = "jobj_req";
-    private String  mPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +47,16 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
              merchantId = extras.getString("merchantId");
             Log.d("HERE ", "" + amount);
             Log.d("HERE ", "" + merchantId);
-            Toast toast = Toast.makeText(getApplicationContext(), amount + "AM HERE" + merchantId, Toast.LENGTH_SHORT);
-            toast.show();
 
         }
 
-        etPin = (EditText) findViewById(R.id.etPin);
-        mPin = etPin.getText().toString();
-        btPay = (Button) findViewById(R.id.btPay);
+        mPin = (EditText) findViewById(R.id.etPin);
+        mPay = (Button) findViewById(R.id.btPay);
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
 
-        btPay.setOnClickListener(this);
+        mPay.setOnClickListener(this);
     }
 
     private void showProgressDialog() {
@@ -77,14 +73,16 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
      * Making json object request
      */
     private void makeJsonObjReq() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
+        stringPin = mPin.getText().toString();
         Log.d("AMOUNT", amount);
-        Log.d("AMOUNT", mPin);
+        Log.d("AMOUNT", stringPin);
         Log.d("AMOUNT", merchantId);
-        params.put("pin",mPin);
+        params.put("pin",stringPin);
         params.put("amount", amount);
         params.put("merchantId", merchantId);
         showProgressDialog();
+
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 Const.URL_JSON_OBJECT, new JSONObject(params) ,
                 new Response.Listener<JSONObject>() {
@@ -109,22 +107,9 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
              * */
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                Log.d("AMOUNT", amount);
-                Log.d("AMOUNT", mPin);
-                Log.d("AMOUNT", merchantId);
-                params.put("pin",mPin);
-                params.put("amount", amount);
-                params.put("merchantId", merchantId);
-
-                return params;
             }
         };
         // Adding request to request queue
@@ -135,6 +120,7 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
     }
     @Override
     public void onClick(View v) {
+        Log.v("EditText", mPin.getText().toString());
         switch (v.getId()){
             case R.id.btPay:
                 makeJsonObjReq();
