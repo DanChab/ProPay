@@ -43,6 +43,7 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            //Retrieve params from bundle
              amount = extras.getString("amount");
              merchantId = extras.getString("merchantId");
             Log.d("HERE ", "" + amount);
@@ -76,9 +77,16 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
      * Making json object request
      */
     private void makeJsonObjReq() {
+        Map<String, String> params = new HashMap<String, String>();
+        Log.d("AMOUNT", amount);
+        Log.d("AMOUNT", mPin);
+        Log.d("AMOUNT", merchantId);
+        params.put("pin",mPin);
+        params.put("amount", amount);
+        params.put("merchantId", merchantId);
         showProgressDialog();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Const.URL_JSON_OBJECT, null,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                Const.URL_JSON_OBJECT, new JSONObject(params) ,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -109,7 +117,9 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-
+                Log.d("AMOUNT", amount);
+                Log.d("AMOUNT", mPin);
+                Log.d("AMOUNT", merchantId);
                 params.put("pin",mPin);
                 params.put("amount", amount);
                 params.put("merchantId", merchantId);
@@ -118,13 +128,11 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
             }
         };
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq,
-                tag_json_obj);
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
         // Cancelling request
         // ApplicationController.getInstance().getRequestQueue().cancelAll(tag_json_obj);
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){

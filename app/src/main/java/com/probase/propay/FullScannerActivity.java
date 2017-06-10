@@ -154,6 +154,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         Since the QR code reader returns a string value, we need
         to get the differents values from it.
         */
+        //TODO Handle error when reading a QR code else then ProPay QR code
         Log.d("DATA", rawResult.toString());
         String qrText = rawResult.toString();
         String[] output = qrText.split("-");

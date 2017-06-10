@@ -47,7 +47,7 @@ public class MessageDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 if(mListener != null) {
 //                    mListener.onDialogPositiveClick(MessageDialogFragment.this);
-                    //Get data from the bundle
+                    //Get params from the bundle
                     Log.d("QRDATA", amount);
                     Log.d("QRDATA", merchantId);
                     // Pass params to PaymentActivity
