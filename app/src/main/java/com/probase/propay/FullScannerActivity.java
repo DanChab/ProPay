@@ -1,6 +1,5 @@
 package com.probase.propay;
 
-import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -33,14 +32,14 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private boolean mAutoFocus;
     private ArrayList<Integer> mSelectedIndices;
     private int mCameraId = -1;
-    private String merchantId;
-    private String amount;
+    private String mMerchantId;
+    private String mAmount;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-          merchantId = "";
-          amount = "";
+          mMerchantId = "";
+          mAmount = "";
         if(state != null) {
             mFlash = state.getBoolean(FLASH_STATE, false);
             mAutoFocus = state.getBoolean(AUTO_FOCUS_STATE, true);
@@ -158,15 +157,14 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         Log.d("DATA", rawResult.toString());
         String qrText = rawResult.toString();
         String[] output = qrText.split("-");
-         amount = output[0];
-         merchantId = output[1];
-        showMessageDialog("Your Bill = k" + amount );
+         mAmount = output[0];
+         mMerchantId = output[1];
+        showMessageDialog("Your Bill = k" + mAmount, mAmount, mMerchantId);
 
     }
 
-    public void showMessageDialog(String message) {
-        passData(amount, merchantId);
-        DialogFragment fragment = MessageDialogFragment.newInstance("Scan Amount", message, this);
+    public void showMessageDialog(String message, String amount, String merchantId) {
+        DialogFragment fragment = MessageDialogFragment.newInstance("Scan Amount", message, mAmount, mMerchantId, this);
         fragment.show(getSupportFragmentManager(), "scan_results");
     }
 
@@ -185,18 +183,11 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
             fragment.dismiss();
         }
     }
-
-    public void passData(String amount, String merchantId){
-        Intent intent = new Intent(this,MessageDialogFragment.class);
-        intent.putExtra("amount", amount);
-        intent.putExtra("merchantId",merchantId);
-        startActivity(intent);
-    }
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         // Resume the camera
         //mScannerView.resumeCameraPreview(this);
-        //passData(amount, merchantId);
+        //passParamsToActivity(mAmount, mMerchantId);
     }
 
     @Override
