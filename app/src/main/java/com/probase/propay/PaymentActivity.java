@@ -1,7 +1,10 @@
 package com.probase.propay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -90,6 +93,9 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
+
+                        //Toast.makeText(getApplicationContext(),"RESPONSE"+response.toString(),Toast.LENGTH_LONG).show();
+                        messageResponse();
                         // msgResponse.setText(response.toString());
                         hideProgressDialog();
                     }
@@ -117,6 +123,21 @@ public class PaymentActivity extends Activity implements View.OnClickListener {
 
         // Cancelling request
         // ApplicationController.getInstance().getRequestQueue().cancelAll(tag_json_obj);
+    }
+    public void messageResponse(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Payment SUCCESSFUL, Thank you for using ProPay");
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
     @Override
     public void onClick(View v) {

@@ -160,11 +160,11 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         String[] output = qrText.split("-");
          mAmount = output[0];
          mMerchantId = output[1];
-        showMessageDialog("Your Bill = k" + mAmount, mAmount, mMerchantId);
+        showMessageDialog("Your Bill = k" + mAmount);
 
     }
 
-    public void showMessageDialog(String message, String amount, String merchantId) {
+    public void showMessageDialog(String message) {
         DialogFragment fragment = MessageDialogFragment.newInstance("Scan Amount", message, mAmount, mMerchantId, this);
         fragment.show(getSupportFragmentManager(), "scan_results");
     }
